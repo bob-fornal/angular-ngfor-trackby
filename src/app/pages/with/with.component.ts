@@ -1,5 +1,5 @@
 
-import { Component, OnInit } from '@angular/core';
+import { AfterViewChecked, Component, OnInit } from '@angular/core';
 
 import { DataService } from 'src/app/core/services/data.service';
 
@@ -8,7 +8,7 @@ import { DataService } from 'src/app/core/services/data.service';
   templateUrl: './with.component.html',
   styleUrls: ['./with.component.scss']
 })
-export class WithComponent implements OnInit {
+export class WithComponent implements AfterViewChecked, OnInit {
 
   data: Array<any> = [];
 
@@ -18,8 +18,25 @@ export class WithComponent implements OnInit {
 
   ngOnInit(): void {
     this.data = this.dataService.data;
+    setTimeout(this.initiateReorganize.bind(this), 500);
+  }
+
+  ngAfterViewChecked(): void {
+    const now: Date = new Date();
+    const difference: number = now.getTime() - this.dataService.startTime.getTime();
+    console.log('difference: ', difference);
   }
 
   identify = (index: number, item: any): string => item.index;
   
+  initiateReorganize = (): void => {
+    const min: number = 0;
+    const max: number = this.dataService.iterations - 1;
+    for (let i = 0, len = this.dataService.iterations; i < len; i++) {
+      const a: number = this.dataService.getRandomInt(min, max);
+      const b: number = this.dataService.getRandomInt(min, max);
+      [this.data[a], this.data[b]] = [this.data[b], this.data[a]];
+    }
+  };
+
 }

@@ -5,10 +5,14 @@ import { Injectable } from '@angular/core';
 })
 export class DataService {
 
-  dataPoints: number = 100000;
+  iterations: number = 1000;
+  dataPoints: number = 10000;
   data: Array<any> = [];
 
+  startTime: Date;
+
   constructor() {
+    this.startTime = new Date();
     this.init();
   }
 
@@ -29,6 +33,12 @@ export class DataService {
     }
     
     return result;
+  };
+
+  getRandomInt = (min: number, max: number) => {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
   };
 
 }
